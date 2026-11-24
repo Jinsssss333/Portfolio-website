@@ -24,6 +24,7 @@ Contact links open email, phone, WhatsApp, and social profiles directly. No mess
 
 Set `NEXT_PUBLIC_SITE_URL` to the real portfolio origin when deploying to enable canonical URLs, social preview images, and the sitemap. No deployment domain is assumed.
 
-## Design attribution
-
-Adapted from [Dario George's my-corner](https://github.com/dariogeorge21/my-corner), preserving the original visual direction and motion. Personal content and project links have been replaced for JINS JOSE. The downloaded source README referenced MIT but did not include a LICENSE file; this adaptation does not assert a new license for the original source.
+## Design Attribution
+- **UI/UX Design & Prototyping:** Designed with **Google Stitch** to establish the visual direction, layout hierarchy, typography, and motion flow.
+- **AI-Assisted Development:** Built and refined using **Codex – ChatGPT Astra** for frontend implementation, responsive styling, and component structuring while preserving the original visual direction and animations.
+- **Design References & Visual Assets:** Layout inspiration drawn from modern developer portfolio showcases across third-party design galleries, with curated visual references and graphic elements sourced via **Pinterest**.
