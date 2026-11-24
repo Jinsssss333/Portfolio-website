@@ -1,0 +1,653 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-mono: var(--font-google-sans-flex), ui-sans-serif, system-ui, sans-serif;
+    --font-lobster: var(--font-google-sans-flex), ui-sans-serif, system-ui, sans-serif;
+    --font-funnel-display: var(--font-google-sans-flex), ui-sans-serif, system-ui, sans-serif;
+    --font-agbalumo: var(--font-google-sans-flex), ui-sans-serif, system-ui, sans-serif;
+    --background: #FAF9F6;
+    /* Alabaster Cream */
+    --foreground: #2A1D17;
+    /* Deep Espresso */
+    --surface: rgba(250, 249, 246, 0.7);
+    --accent: #995F2F;
+    /* Warm Brown */
+    --muted: #978F66;
+    /* Sage Taupe */
+    --border: rgba(42, 29, 23, 0.08);
+  }
+
+  .dark {
+    --background: #0C0A09;
+    /* Obsidian */
+    --foreground: #E4D6A9;
+    /* Warm Cream */
+    --surface: rgba(20, 16, 14, 0.6);
+    --accent: #978F66;
+    /* Sage Taupe */
+    --muted: #622B14;
+    /* Rich Brown */
+    --border: rgba(228, 214, 169, 0.08);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  body {
+    font-family: var(--font-google-sans-flex), ui-sans-serif, system-ui, sans-serif;
+    @apply bg-background text-foreground antialiased selection:bg-accent selection:text-white;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    touch-action: manipulation;
+    /* Eliminates 300ms tap delay on mobile */
+  }
+}
+
+/* Smooth Scrolling Setup for Lenis */
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Ambient Background Glow */
+.ambient-glow {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at 50% 0%, var(--accent), transparent 60%);
+  opacity: 0.15;
+  filter: blur(100px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* =========================================================
+   TOUCH / POINTER: Disable custom cursor styles on touch devices.
+   cursor-none is only meaningful on pointer:fine (mouse) devices.
+   ========================================================= */
+@media (pointer: coarse) {
+  .cursor-none {
+    cursor: auto !important;
+  }
+}
+
+/* =========================================================
+   GLASS-CARD SOCIAL LINKS — 3D Isometric Design System
+   Single source of truth for all glass card styles.
+   These replace the dangerouslySetInnerHTML injections
+   in contact.tsx and contact-client.tsx.
+
+   Design intent: Cards are isometric floating objects.
+   The 3D effect is PRESERVED at every breakpoint — only
+   the scale adapts. Nothing is flattened.
+   ========================================================= */
+
+/* ── Base Card ─────────────────────────────────────────── */
+.glass-card {
+  position: relative;
+  display: inline-flex;
+  width: 260px;
+  height: 80px;
+  background: #fff;
+  text-decoration: none;
+  padding-left: 20px;
+  margin-bottom: 80px;
+  /* Scale adapts per breakpoint — see below. Base is mobile-first 60% */
+  transform: rotate(-30deg) skew(25deg) scale(0.6) translate(0, 0);
+  transform-origin: center center;
+  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+    background 0.5s ease;
+  box-shadow: -20px 20px 10px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  /* Ensure the 3D pseudo-elements render correctly */
+  will-change: transform, box-shadow;
+}
+
+/* ── Left extrusion face (::before) ────────────────────── */
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: -20px;
+  height: 100%;
+  width: 20px;
+  background: #b1b1b1;
+  transform: rotate(0deg) skewY(-45deg);
+  transition: background 0.5s ease;
+}
+
+/* ── Bottom extrusion face (::after) ───────────────────── */
+.glass-card::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: -10px;
+  height: 20px;
+  width: 100%;
+  background: #b1b1b1;
+  transform: rotate(0deg) skewX(-45deg);
+  transition: background 0.5s ease;
+}
+
+/* ── Hover lift (pointer devices only) ─────────────────── */
+@media (hover: hover) and (pointer: fine) {
+  .glass-card:hover {
+    transform: rotate(-30deg) skew(25deg) scale(0.6) translate(20px, -15px);
+    box-shadow: -50px 50px 50px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* ── Touch active: 3D lift feedback on tap ─────────────── */
+@media (pointer: coarse) {
+  .glass-card:active {
+    transform: rotate(-30deg) skew(25deg) scale(0.6) translate(16px, -12px) !important;
+    box-shadow: -40px 40px 35px rgba(0, 0, 0, 0.5) !important;
+    transition-duration: 0.15s !important;
+  }
+}
+
+/* ── Icon ───────────────────────────────────────────────── */
+.glass-card-icon {
+  font-size: 60px;
+  color: #262626;
+  padding-top: 10px;
+  line-height: 80px;
+  transition: color 0.5s ease;
+  padding-right: 14px;
+  display: inline-block;
+}
+
+.glass-card:hover .glass-card-icon {
+  color: #fff;
+}
+
+/* ── Label ──────────────────────────────────────────────── */
+.glass-card-name {
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: 16px;
+  font-family: var(--font-funnel-display);
+  left: 76px;
+  color: #262626;
+  letter-spacing: 4px;
+  transition: color 0.5s ease;
+  font-weight: 1000;
+  font-size: 24px;
+}
+
+.glass-card:hover .glass-card-name {
+  color: #fff;
+}
+
+/* ── Per-brand hover colors ─────────────────────────────── */
+/* LinkedIn */
+.glass-card.linkedin:hover {
+  background: #0077b5;
+}
+
+.glass-card.linkedin:hover::before {
+  background: #005a87;
+}
+
+.glass-card.linkedin:hover::after {
+  background: #0099e0;
+}
+
+/* GitHub */
+.glass-card.github:hover {
+  background: #333;
+}
+
+.glass-card.github:hover::before {
+  background: #1a1a1a;
+}
+
+.glass-card.github:hover::after {
+  background: #666;
+}
+
+/* Twitter / X */
+.glass-card.twitter:hover {
+  background: #00aced;
+}
+
+.glass-card.twitter:hover::before {
+  background: #097aa5;
+}
+
+.glass-card.twitter:hover::after {
+  background: #53b9e0;
+}
+
+/* Instagram */
+.glass-card.instagram:hover {
+  background: #e4405f;
+}
+
+.glass-card.instagram:hover::before {
+  background: #d81c3f;
+}
+
+.glass-card.instagram:hover::after {
+  background: #e46880;
+}
+
+/* Email */
+.glass-card.email:hover {
+  background: #ea4335;
+}
+
+.glass-card.email:hover::before {
+  background: #c5221f;
+}
+
+.glass-card.email:hover::after {
+  background: #f28482;
+}
+
+/* ── Touch brand colors on :active ─────────────────────── */
+@media (pointer: coarse) {
+  .glass-card.linkedin:active {
+    background: #0077b5 !important;
+  }
+
+  .glass-card.linkedin:active::before {
+    background: #005a87 !important;
+  }
+
+  .glass-card.linkedin:active::after {
+    background: #0099e0 !important;
+  }
+
+  .glass-card.linkedin:active .glass-card-icon,
+  .glass-card.linkedin:active .glass-card-name {
+    color: #fff !important;
+  }
+
+  .glass-card.github:active {
+    background: #333 !important;
+  }
+
+  .glass-card.github:active::before {
+    background: #1a1a1a !important;
+  }
+
+  .glass-card.github:active::after {
+    background: #666 !important;
+  }
+
+  .glass-card.github:active .glass-card-icon,
+  .glass-card.github:active .glass-card-name {
+    color: #fff !important;
+  }
+
+  .glass-card.twitter:active {
+    background: #00aced !important;
+  }
+
+  .glass-card.twitter:active::before {
+    background: #097aa5 !important;
+  }
+
+  .glass-card.twitter:active::after {
+    background: #53b9e0 !important;
+  }
+
+  .glass-card.twitter:active .glass-card-icon,
+  .glass-card.twitter:active .glass-card-name {
+    color: #fff !important;
+  }
+
+  .glass-card.instagram:active {
+    background: #e4405f !important;
+  }
+
+  .glass-card.instagram:active::before {
+    background: #d81c3f !important;
+  }
+
+  .glass-card.instagram:active::after {
+    background: #e46880 !important;
+  }
+
+  .glass-card.instagram:active .glass-card-icon,
+  .glass-card.instagram:active .glass-card-name {
+    color: #fff !important;
+  }
+
+  .glass-card.email:active {
+    background: #ea4335 !important;
+  }
+
+  .glass-card.email:active::before {
+    background: #c5221f !important;
+  }
+
+  .glass-card.email:active::after {
+    background: #f28482 !important;
+  }
+
+  .glass-card.email:active .glass-card-icon,
+  .glass-card.email:active .glass-card-name {
+    color: #fff !important;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE SCALE SYSTEM
+   The 3D transform is preserved at all breakpoints.
+   Only the scale value changes to fit available space.
+
+   Hover transforms mirror the base transform + scale +
+   the translate lift so they remain consistent.
+   ========================================================= */
+
+/* sm: ≥ 480px — 70% */
+@media (min-width: 480px) {
+  .glass-card {
+    transform: rotate(-30deg) skew(25deg) scale(0.7) translate(0, 0);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .glass-card:hover {
+      transform: rotate(-30deg) skew(25deg) scale(0.7) translate(20px, -15px);
+    }
+  }
+
+  @media (pointer: coarse) {
+    .glass-card:active {
+      transform: rotate(-30deg) skew(25deg) scale(0.7) translate(16px, -12px) !important;
+    }
+  }
+}
+
+/* md: ≥ 768px — 85% */
+@media (min-width: 768px) {
+  .glass-card {
+    transform: rotate(-30deg) skew(25deg) scale(0.85) translate(0, 0);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .glass-card:hover {
+      transform: rotate(-30deg) skew(25deg) scale(0.85) translate(20px, -15px);
+    }
+  }
+
+  @media (pointer: coarse) {
+    .glass-card:active {
+      transform: rotate(-30deg) skew(25deg) scale(0.85) translate(16px, -12px) !important;
+    }
+  }
+}
+
+/* lg: ≥ 1024px — 100% original size */
+@media (min-width: 1024px) {
+  .glass-card {
+    transform: rotate(-30deg) skew(25deg) scale(1) translate(0, 0);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .glass-card:hover {
+      transform: rotate(-30deg) skew(25deg) scale(1) translate(20px, -15px);
+    }
+  }
+}
+
+/* =========================================================
+   GLASS-CARDS SCROLL RAIL
+   Horizontal scroll container that preserves card 3D at
+   mobile sizes. Cards do not wrap — they scroll natively.
+   ========================================================= */
+.glass-cards-rail {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 0;
+  overflow-x: auto;
+  overflow-y: visible;
+  /* Reserve vertical space for the 3D card geometry */
+  padding-top: 20px;
+  padding-bottom: 40px;
+  padding-left: 24px;
+  padding-right: 48px;
+  /* Smooth momentum scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
+  /* Horizontal snap for premium feel */
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  /* Firefox */
+  /* Spacing between cards accounts for the isometric skew offset */
+  column-gap: 0px;
+  perspective: 1000px;
+}
+
+.glass-cards-rail::-webkit-scrollbar {
+  display: none;
+  /* Chrome/Safari */
+}
+
+/* Each card snaps individually */
+.glass-cards-rail .glass-card {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+/* On desktop (lg+), rail becomes a standard flex-wrap row */
+@media (min-width: 1024px) {
+  .glass-cards-rail {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    overflow-y: visible;
+    padding-top: 20px;
+    padding-bottom: 40px;
+    padding-left: 0;
+    padding-right: 0;
+    scroll-snap-type: none;
+    gap: 0;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+/* ── Pulse-scale keyframe (used in contact section) ─────── */
+@keyframes pulse-scale {
+
+  0%,
+  100% {
+    transform: scale(1) translate(0, 0);
+    filter: drop-shadow(0 0 0px rgba(96, 165, 250, 0));
+  }
+
+  50% {
+    transform: scale(1.15) translate(3px, -3px);
+    filter: drop-shadow(0 0 12px rgba(96, 165, 250, 0.8));
+  }
+}
+
+.animate-pulse-scale {
+  animation: pulse-scale 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: 1.5s;
+}
+
+/* =========================================================
+   APPLE GLASS SPHERE & SOCIAL DOCK
+   Photorealistic 3D glass spheres, frosted pills, and lighting
+   inspired by Apple VisionOS and Awwwards digital craft.
+   ========================================================= */
+
+.apple-glass-sphere {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 32% 28%, #ffffff 0%, #f4f6fa 38%, #e0e6f0 76%, #ccd5e3 100%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 12px 26px -4px rgba(0, 0, 0, 0.12),
+    0 4px 10px -2px rgba(0, 0, 0, 0.05),
+    inset 0 2.5px 4px rgba(255, 255, 255, 0.98),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.07),
+    inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: transform, box-shadow;
+}
+
+/* Curved specular glint crescent */
+.apple-glass-sphere::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 18%;
+  right: 18%;
+  height: 38%;
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Subtle caustic bottom glow */
+.apple-glass-sphere::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 22%;
+  right: 22%;
+  height: 20%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.5) 0%, transparent 80%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Dark mode glass sphere */
+.dark .apple-glass-sphere {
+  background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.09) 36%, rgba(36, 30, 26, 0.85) 75%, rgba(14, 11, 10, 0.98) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 14px 32px -4px rgba(0, 0, 0, 0.65),
+    0 4px 12px -2px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.38),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.55),
+    inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.22);
+}
+
+.dark .apple-glass-sphere::before {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.dark .apple-glass-sphere::after {
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.12) 0%, transparent 80%);
+}
+
+/* ── Apple Glass Capsule Pill ── */
+.apple-glass-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 244, 250, 0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 12px 26px -4px rgba(0, 0, 0, 0.1),
+    0 4px 8px -2px rgba(0, 0, 0, 0.04),
+    inset 0 2px 3px rgba(255, 255, 255, 0.95),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: transform, box-shadow;
+}
+
+.dark .apple-glass-pill {
+  background: linear-gradient(180deg, rgba(38, 31, 27, 0.9) 0%, rgba(18, 14, 12, 0.96) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 14px 30px -4px rgba(0, 0, 0, 0.55),
+    0 4px 10px -2px rgba(0, 0, 0, 0.35),
+    inset 0 1.5px 3px rgba(255, 255, 255, 0.28),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.38);
+}
+/* =========================================================
+   REDUCED MOTION — respect user preference everywhere
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =========================================================
+   SEND BUTTON — "paper plane flight" loading state
+   ========================================================= */
+@keyframes send-sheen {
+  0% { transform: translateX(-120%) skewX(-20deg); }
+  100% { transform: translateX(260%) skewX(-20deg); }
+}
+@keyframes send-orbit {
+  to { transform: rotate(360deg); }
+}
+@keyframes send-trail {
+  0% { transform: translateX(-30px); opacity: 0; }
+  40% { opacity: 1; }
+  100% { transform: translateX(30px); opacity: 0; }
+}
+.send-btn-loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  animation: send-sheen 1.1s ease-in-out infinite;
+  pointer-events: none;
+}
+.send-orbit {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-right-color: transparent;
+  animation: send-orbit 0.8s linear infinite;
+}
+.send-trail-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background: currentColor;
+  animation: send-trail 1s ease-in-out infinite;
+}
