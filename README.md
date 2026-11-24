@@ -1,4 +1,4 @@
-# JINS JOSE â€” Portfolio
+# JINS JOSE ” Portfolio
 
 Personal portfolio for JINS JOSE, a software developer focused on backend systems, AI integration, and open source.
 
